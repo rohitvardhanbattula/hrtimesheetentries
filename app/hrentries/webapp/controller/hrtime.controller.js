@@ -38,9 +38,11 @@ sap.ui.define([
             oEmployeeModel = this.getOwnerComponent().getModel("EmployeeService");
             oWbsModel = this.getOwnerComponent().getModel("WbselementService");
             oTaskModel = this.getOwnerComponent().getModel("TaskService");
+            oTempModel=this.getOwnerComponent().getModel("my");
             that.getView().setModel(oEmployeeModel);
             that.getView().setModel(oWbsModel,"WbsElement");
             that.getView().setModel(oTaskModel,"Tasks");
+            that.getView().setModel(oTempModel,"Temps");
         },
         onFilter: function () {
             var EmployeeId = this.getView().byId("id_employee_extid");

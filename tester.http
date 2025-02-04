@@ -1,11 +1,11 @@
 ###Posting template data
 
 
-http://localhost:4004/odata/v4/my/Templates
+http://localhost:4004/odata/v2/my/Templates
 
 ###Posting templates
 
-POST http://localhost:4004/odata/v4/my/SaveTemplate
+POST http://localhost:4004/odata/v2/my/SaveTemplate
 Content-Type: application/json
 
 {
@@ -30,10 +30,10 @@ Content-Type: application/json
 }
 
 ###GET TemplateId
-http://localhost:4004/odata/v4/my/GetAllTemplateIds
+http://localhost:4004/odata/v2/my/GetAllTemplateIds
 
 ###
-POST http://localhost:4004/odata/v4/my/GetTemplateData
+POST http://localhost:4004/odata/v2/my/GetTemplateData
 Content-Type: application/json
 
 {

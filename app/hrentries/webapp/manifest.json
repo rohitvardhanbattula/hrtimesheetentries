@@ -47,6 +47,14 @@
           "annotations": [],
           "odataVersion": "2.0"
         }
+      },
+      "TemplateService":{
+        "uri": "/odata/v2/my/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "odataVersion": "2.0"
+        }
       }
     }
   },

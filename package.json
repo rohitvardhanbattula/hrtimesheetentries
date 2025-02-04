@@ -6,26 +6,27 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
+    "@cap-js-community/odata-v2-adapter": "^1.14.1",
     "@sap/cds": "^8",
     "express": "^4"
   },
   "cds": {
     "requires": {
-    "db": {
-      "name": "sqlite",
-      "model": "db/schema.cds",
-      "credentials": {
-        "database": "db.sqlite"
+      "db": {
+        "name": "sqlite",
+        "model": "db/schema.cds",
+        "credentials": {
+          "database": "db.sqlite"
+        }
+      },
+      "srv": {
+        "name": "timesheet"
       }
-    },
-    "srv": {
-      "name": "timesheet"
     }
-  }
-},
+  },
   "devDependencies": {
-    "@cap-js/sqlite": "^1",
-    "@cap-js/cds-types": "^0.8.0"
+    "@cap-js/cds-types": "^0.8.0",
+    "@cap-js/sqlite": "^1"
   },
   "scripts": {
     "start": "cds-serve"
