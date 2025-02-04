@@ -1,0 +1,41 @@
+###Posting template data
+
+
+http://localhost:4004/odata/v4/my/Templates
+
+###Posting templates
+
+POST http://localhost:4004/odata/v4/my/SaveTemplate
+Content-Type: application/json
+
+{
+    "entries": [
+        {
+            "TemplateId": "template001",
+            "EmployeeExternalId": "EMP123",
+            "Date": "2025-02-04",
+            "WBSElement": "W01",
+            "TaskType": "DEV",
+            "RecordedHours": 8.0
+        },
+        {
+            "TemplateId": "template001",
+            "EmployeeExternalId": "EMP456",
+            "Date": "2025-02-05",
+            "WBSElement": "W02",
+            "TaskType": "TST",
+            "RecordedHours": 6.5
+        }
+    ]
+}
+
+###GET TemplateId
+http://localhost:4004/odata/v4/my/GetAllTemplateIds
+
+###
+POST http://localhost:4004/odata/v4/my/GetTemplateData
+Content-Type: application/json
+
+{
+    "TemplateId":"template001"
+}

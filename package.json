@@ -1,0 +1,33 @@
+{
+  "name": "hrtimesheetentries",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/cds": "^8",
+    "express": "^4"
+  },
+  "cds": {
+    "requires": {
+    "db": {
+      "name": "sqlite",
+      "model": "db/schema.cds",
+      "credentials": {
+        "database": "db.sqlite"
+      }
+    },
+    "srv": {
+      "name": "timesheet"
+    }
+  }
+},
+  "devDependencies": {
+    "@cap-js/sqlite": "^1",
+    "@cap-js/cds-types": "^0.8.0"
+  },
+  "scripts": {
+    "start": "cds-serve"
+  }
+}

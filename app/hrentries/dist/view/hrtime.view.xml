@@ -1,0 +1,137 @@
+<mvc:View controllerName="hrentries.hrentries.controller.hrtime"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m" xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout">
+    <Page showFooter="true" id="page" title="{i18n>title}">
+         <content>
+         <VBox id="id_vbox" class="sapUiSmallMargin">
+                <f:SimpleForm id="id_simpleform" editable="true" layout="ResponsiveGridLayout" title="Selection Screen" labelSpanXL="4" 
+                        labelSpanM="4" labelSpanL="3" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0"
+                        emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1" singleContainerFullSize="false" >
+                    <f:content>
+                        <core:Title id="id_stitle" text="Input"></core:Title>
+                        <Label id="id_employee_label" text="Employee Id" design="Bold" width="100%" required="true" textAlign="Begin" textDirection="LTR" />
+                        <Input id="id_employee_extid" change="onChange" showValueHelp="true"  valueHelpRequest=".onEmployeeVH" />
+						<ToolbarSpacer id="id_toolsbar_slectionscreen1" ></ToolbarSpacer>
+                        <Label id="id_daterangelabel" text="Start Date &amp; End Date" design="Bold" width="100%" required="true" textAlign="Right" textDirection="Inherit"/>
+						<DateRangeSelection id="id_daterange" showCurrentDateButton="true"
+			            change="handleDateChange"
+                        value= "{
+				                    'type': 'sap.ui.model.type.DateInterval',
+				                    'formatOptions': {
+					                'pattern': 'yyyy-MM-dd'
+				                },
+				                    'parts': [
+					                            {
+						                            'type': 'sap.ui.model.type.Date',
+						                            'path': '/start'
+					                            },
+					                            {
+						                            'type': 'sap.ui.model.type.Date',
+						                            'path': '/end'
+					                            }
+				                            ]
+			                    }" />
+                        <ToolbarSpacer id="id_toolsbar_slectionscreen" ></ToolbarSpacer>	
+				        <Button id="id_search" text="Search" width="100%" type="Emphasized" press=".onFilter" class="sapUiSmallMarginEnd" >
+					        <layoutData>
+						        <FlexItemData id="id_itemdata5" growFactor="1" />
+					        </layoutData>
+				        </Button>
+                    </f:content>
+                   </f:SimpleForm>
+            </VBox>
+            <VBox id="id_vboxtable" class="sapUiSmallMargin">
+					<Table width="auto" noDataText="No data" showSeparators="All" growing="true" growingThreshold="20" growingScrollToLoad="true"
+						items="{ path: 'Timesheet>/' }" id="daysTable" showUnread="true" showNoData="false" backgroundDesign="Solid"
+						selectionChange="onSelectionChange" mode="MultiSelect" sticky="ColumnHeaders,HeaderToolbar">
+						<columns>
+							<Column id="idcolumn1" width="auto" hAlign="Center" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Block" mergeDuplicates="false">
+								<header>
+									<Text id="idtext1" text="Employee External No" width="auto" maxLines="1" wrapping="true" textAlign="Begin" textDirection="Inherit"/>
+								</header>
+								<footer/>
+							</Column>
+							<Column id="idcolumn2" width="auto" hAlign="Center" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Block" mergeDuplicates="false">
+								<header>
+									<Text id="idtext2" text="Recorded Date" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit"/>
+								</header>
+								<footer/>
+							</Column>
+							<Column id="idcolumn3" width="auto" hAlign="Center" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Block" mergeDuplicates="false">
+								<header>
+									<Text id="idtext3" text="Task Type" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit"/>
+								</header>
+								<footer/>
+							</Column>
+							<Column id="idcolumn4" width="auto" hAlign="Center" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Block" mergeDuplicates="false">
+								<header>
+									<Text id="idtext4" text="WBS Element" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit"/>
+								</header>
+								<footer/>
+							</Column>
+							<Column id="idcolumn5" width="auto" hAlign="Center" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Block" mergeDuplicates="false">
+								<header>
+									<Text id="idtext5" text="Recorded Hours" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit"/>
+								</header>
+								<footer/>
+							</Column>
+							<Column id="idcolumn6" width="auto" hAlign="Center" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Block" mergeDuplicates="false">
+								<header>
+									<Text id="idtext6" text="Recorded Quantity" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit"/>
+								</header>
+								<footer/>
+							</Column>
+                            <Column id="idcolumn7" width="auto" hAlign="Center" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Block" mergeDuplicates="false">
+								<header>
+									<Text id="idtext7" text="Recorded Status" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit"/>
+								</header>
+								<footer/>
+							</Column>
+							<Column id="idcolumn8" width="auto" hAlign="Center" vAlign="Top" minScreenWidth="Tablet" demandPopin="true" popinDisplay="Block" mergeDuplicates="false">
+								<header>
+									<Text id="idtext8" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit"/>
+								</header>
+								<footer/>
+							</Column>
+						</columns>
+						<items>
+							<ColumnListItem id="columnList" highlight="None">
+								<cells>
+									<Text id="id_cell1" text="{Timesheet>PersonWorkAgreementExternalID}"/>
+									<DateTimePicker id="id_cell2" value= "{
+                                                                                                        path: 'Timesheet>TimeSheetDate',
+                                                                                                        type: 'sap.ui.model.type.DateTime',
+                                                                                                        formatOptions: {
+                                                                                                                            'pattern': 'MM/dd/yyyy',
+																															'strictParsing': true,
+                                                                                                                            'UTC': true
+                                                                                                                        }
+								                                                                }"
+                                                                                                editable="false"
+							        />
+									<Text id="id_cell3" text="{Timesheet>TimeSheetTaskType}"/>
+									<Text id="id_cell4" text="{Timesheet>WBSElementInternalID}"/>
+                                    <Text id="id_cell5" text="{Timesheet>RecordedHours}"/>
+                                    <Text id="id_cell6" text="{Timesheet>RecordedQuantity}"/>
+									<Text id="id_cell7" text="{Timesheet>TimeSheetStatus}"/>
+									<Button id="id_cell8" type="Reject" iconFirst="true" width="auto"
+									iconDensityAware="false" press="ondelete" icon="sap-icon://delete"/>
+								</cells>
+							</ColumnListItem>
+						</items>
+					</Table>
+				</VBox>
+        </content>
+			<footer>
+				<Bar id="id_button_footer" design="Auto">
+					<contentRight>
+						<Button id="id_button_add" text="Add New Entries" type="Accept" iconFirst="true" width="auto" enabled="true" visible="{path: '/buttonsVisible/edit'}" activeIcon="sap-icon://edit"
+							press="onAdd" icon="sap-icon://add"/>
+						<Button id="id_button_cancel" text="Delete" type="Reject" iconFirst="true" width="auto" visible="{path: '/buttonsVisible/cancel'}"
+							iconDensityAware="false" press="ondelete" icon="sap-icon://delete"/>
+					</contentRight>
+				</Bar>
+			</footer>
+    </Page>
+</mvc:View>
