@@ -1,27 +1,26 @@
-<core:FragmentDefinition xmlns:odata="sap.ui.comp.odata" xmlns="sap.m"
+<core:FragmentDefinition xmlns:odata="sap.ui.comp.odata"
+	xmlns="sap.m"
 	xmlns:f="sap.ui.layout.form"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:core="sap.ui.core">
-    <Dialog id="id_dialogaddentries" title="{i18n>addentriy}">
-        <content>
-            <VBox id="id_add_vbox" class="sapUiSmallMargin">
-                <f:SimpleForm id="id_add_entries_simpleform" editable="true" layout="ResponsiveGridLayout" title="Selection Screen" labelSpanXL="4" 
-                        labelSpanM="4" labelSpanL="3" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0"
-                        emptySpanS="0" columnsXL="3" columnsL="1" columnsM="1" singleContainerFullSize="false" >
-                    <f:content>
-                        <Label id="id_add_employee_label" text="Employee Id" design="Bold" width="100%" required="true" textAlign="Begin" textDirection="LTR" />
-                        <Input id="id_add_employee_extid" change="onChange" showValueHelp="true"  valueHelpRequest=".onEmployeeVH" />
+	<Dialog id="id_dialogaddentries" title="{i18n>addentriy}">
+		<content>
+			<VBox id="id_add_vbox" class="sapUiSmallMargin">
+				<f:SimpleForm id="id_add_entries_simpleform" editable="true" layout="ResponsiveGridLayout" title="Selection Screen" labelSpanXL="4" labelSpanM="4" labelSpanL="3" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="3" columnsL="1" columnsM="1" singleContainerFullSize="false">
+					<f:content>
+						<Label id="id_add_employee_label" text="Employee Id" design="Bold" width="100%" required="true" textAlign="Begin" textDirection="LTR" />
+						<Input id="id_add_employee_extid" change="onChange" showValueHelp="true" valueHelpRequest=".onEmployeeVH" />
 						<Label id="id_add_wrkid_label" visible="false" text="Employee workagreement Id" design="Bold" width="100%" required="true" textAlign="Begin" textDirection="LTR" />
-                        <Text id="id_add_wrkid" visible="false"/>
+						<Text id="id_add_wrkid" visible="false"/>
 						<Label id="id_add_ccode_label" visible="false" text="Company Code" design="Bold" width="100%" required="true" textAlign="Begin" textDirection="LTR" />
-                        <Text id="id_add_ccode" visible="false"/><Text id="id_add_ccodetext" visible="false"/>
+						<Text id="id_add_ccode" visible="false"/>
+						<Text id="id_add_ccodetext" visible="false"/>
 						<Label id="id_add_ccenter_label" visible="false" text="Cost Center" design="Bold" width="100%" required="true" textAlign="Begin" textDirection="LTR" />
-                        <Text id="id_add_ccenter" visible="false"/><Text id="id_add_ccentertext" visible="false"/>
-						<ToolbarSpacer id="id_toolsbar_add_entry" ></ToolbarSpacer>
-                        <Label id="id_add_daterangelabel" text="Start Date &amp; End Date" design="Bold" width="100%" required="true" textAlign="Right" textDirection="Inherit"/>
-						<DateRangeSelection id="id_add_daterange" calendarWeekNumbering="Default" showCurrentDateButton="true"
-			            change="handleDateChangeadd_entries"
-                        value= "{
+						<Text id="id_add_ccenter" visible="false"/>
+						<Text id="id_add_ccentertext" visible="false"/>
+						<ToolbarSpacer id="id_toolsbar_add_entry"></ToolbarSpacer>
+						<Label id="id_add_daterangelabel" text="Start Date &amp; End Date" design="Bold" width="100%" required="true" textAlign="Right" textDirection="Inherit"/>
+						<DateRangeSelection id="id_add_daterange" calendarWeekNumbering="Default" showCurrentDateButton="true" change="handleDateChangeadd_entries" value= "{
 				                    'type': 'sap.ui.model.type.DateInterval',
 				                    'formatOptions': {
 					                'pattern': 'yyyy-MM-dd'
@@ -37,49 +36,46 @@
 					                            }
 				                            ]
 			                    }" />
-                    </f:content>
-                   </f:SimpleForm>
-            </VBox>
-            <VBox class="sapUiSmallMargin" id="tableContainer1">
-                <Table id="tableId1" width="auto" mode="Delete" delete="deleteRow" inset="false" enableBusyIndicator="true"
-				sticky="ColumnHeaders,HeaderToolbar"
-				growing="true"
-				alternateRowColors="true"
-				showNoData="true"
-				items="{
+					</f:content>
+				</f:SimpleForm>
+			</VBox>
+			<VBox class="sapUiSmallMargin" id="tableContainer1">
+				<Table id="tableId1" selectionChange="onRowselect" width="auto" mode="Delete" delete="deleteRow" inset="false" enableBusyIndicator="true" sticky="ColumnHeaders,HeaderToolbar" growing="true" alternateRowColors="true" showNoData="true" items="{
 						path: 'Entries>/'
 					}">
-							<headerToolbar>
-								<Toolbar id="id_tabletoolbar1">
-									<ToolbarSpacer id="id_tabletoolbar2"></ToolbarSpacer>
-									<Button id="id_add_button" text="Add Row" icon="sap-icon://add" type="Emphasized" press="onAddEntry"/>
-								</Toolbar>
-							</headerToolbar>
-							<columns>
-								<Column id="id_column1" visible="false">
-									<Text id="id_srno" text="S.No"/>
-								</Column>
-								<Column id="id_column2">
-									<Text id="id_date" text="Date"/>
-								</Column>
-								<Column id="id_column3">
-									<Text id="id_tasktype" text="Task Type"/>
-								</Column>
-								<Column id="id_column4">
-									<Text id="id_wbs_elmt" text="WBS Element"/>
-								</Column>
-								<Column id="id_column5">
-									<Text id="id_recordedhrs" text="Recorded Hours"/>
-								</Column>
-                                <Column id="id_column6">
-									<Text id="id_recorded_qnty" text="Recorded Quantity"/>
-								</Column>
-							</columns>
-							<items>
-							<ColumnListItem id="id_uploadcolumnlist1" vAlign="Middle" >
-								<cells>
-									<Input id="_IDsno"                	   value="{Entries>Id}" />
-									<DatePicker id="_IDGenInput" value= "{
+					<headerToolbar>
+						<Toolbar id="id_tabletoolbar1">
+							<ToolbarSpacer id="id_tabletoolbar2"></ToolbarSpacer>
+							<Button id="id_previous_time_entry_button" text="Previous Time Entry" icon="sap-icon://sys-prev-page" press="onAddPreviousTimeEntry"/>
+							<Button id="id_select_temp_button" text="Select Template" press="onSelectTemplate" icon="sap-icon://attachment"/>
+							<Button id="id_add_button" text="Add Row" icon="sap-icon://add" type="Emphasized" press="onAddEntry"/>
+						</Toolbar>
+					</headerToolbar>
+					<columns>
+						<Column id="id_column1" visible="false">
+							<Text id="id_srno" text="S.No"/>
+						</Column>
+						<Column id="id_column2">
+							<Text id="id_date" text="Date"/>
+						</Column>
+						<Column id="id_column3">
+							<Text id="id_tasktype" text="Task Type"/>
+						</Column>
+						<Column id="id_column4">
+							<Text id="id_wbs_elmt" text="WBS Element"/>
+						</Column>
+						<Column id="id_column5">
+							<Text id="id_recordedhrs" text="Recorded Hours"/>
+						</Column>
+						<Column id="id_column6">
+							<Text id="id_recorded_qnty" text="Recorded Quantity"/>
+						</Column>
+					</columns>
+					<items>
+						<ColumnListItem id="id_uploadcolumnlist1" vAlign="Middle">
+							<cells>
+								<Input id="_IDsno" value="{Entries>Id}" />
+								<DatePicker id="_IDGenInput" value= "{
                                                                                 path: 'Entries>TimesheetDate',
                                                                                 type: 'sap.ui.model.type.DateTime',
                                                                                 formatOptions: {
@@ -87,74 +83,49 @@
 																									'strictParsing': true,
                                                                                                     'UTC': true
                                                                                                 }
-								                                            }"
-
-
-							        />
-									<ComboBox id="id_taskcombo"
-														showSecondaryValues="true"
-														filterSecondaryValues= "true"
-														change="taskChange"
-														selectedKey="{Entries>TaskType}"
-														width="100%"
-														items="{
+								                                            }" />
+								<ComboBox id="id_taskcombo" showSecondaryValues="true" filterSecondaryValues= "true" change="taskChange" selectedKey="{Entries>TaskType}" width="100%" items="{
 																	path: 'Tasks>/MyTasks',
 																	templateShareable:false,
 																	sorter: { path: 'TimeSheetTaskType' },
 																	length:999999
-																}"
-														editable="{= ${Entries>WBSElemt} === '' ? true : false }"
-												>
-										<core:ListItem id="id_taskitem" key="{Tasks>TimeSheetTaskType}" text="{Tasks>TimeSheetTaskType}" additionalText="{Tasks>TimeSheetTaskTypeText}"/>
-											<layoutData>
-												<FlexItemData id="id_taskcombo2" growFactor="1" />
-											</layoutData>
-									</ComboBox>
-									<ComboBox id="id_wbscombo"
-														showSecondaryValues="true"
-														filterSecondaryValues= "true"
-														change="wbsChange"
-														selectedKey="{Entries>WBSElemt}"
-														width="100%"
-														items="{
+																}" editable="{= ${Entries>WBSElemt} === '' ? true : false }">
+									<core:ListItem id="id_taskitem" key="{Tasks>TimeSheetTaskType}" text="{Tasks>TimeSheetTaskType}" additionalText="{Tasks>TimeSheetTaskTypeText}"/>
+									<layoutData>
+										<FlexItemData id="id_taskcombo2" growFactor="1" />
+									</layoutData>
+								</ComboBox>
+								<ComboBox id="id_wbscombo" showSecondaryValues="true" filterSecondaryValues= "true" change="wbsChange" selectedKey="{Entries>WBSElemt}" width="100%" items="{
 																	path: 'WbsElement>/MyWbsElement',
 																	filters: { path: 'Language', operator: 'EQ', value1: 'EN' },
 																	templateShareable:false,
-											
 																	sorter: { path: 'HierarchyNode' },
 																	length:999999
-																}"
-														 editable="{= ${Entries>TaskType} === '' ? true : false }"
-												>
-										<core:ListItem id="id_wbsitem" key="{WbsElement>HierarchyNode}" text="{WbsElement>HierarchyNode}" additionalText="{WbsElement>HierarchyNodeText}"/>
-											<layoutData>
-												<FlexItemData id="id_wbscombo2" growFactor="1" />
-											</layoutData>
-									</ComboBox>	
-									<Input id="id_hours_add"  		       value="{Entries>RecordedHours}" />
-									<Input id="id_quant_add"  		       value="{Entries>RecordedQuantity}" />
-								</cells>
-							</ColumnListItem>
-							</items>
+																}" editable="{= ${Entries>TaskType} === '' ? true : false }">
+									<core:ListItem id="id_wbsitem" key="{WbsElement>HierarchyNode}" text="{WbsElement>HierarchyNode}" additionalText="{WbsElement>HierarchyNodeText}"/>
+									<layoutData>
+										<FlexItemData id="id_wbscombo2" growFactor="1" />
+									</layoutData>
+								</ComboBox>
+								<Input id="id_hours_add" value="{Entries>RecordedHours}" />
+								<Input id="id_quant_add" value="{Entries>RecordedQuantity}" />
+							</cells>
+						</ColumnListItem>
+					</items>
 				</Table>
-            </VBox>
-        </content>
-        <footer>
-            <Toolbar id="id_createtoolbar">
-                <content>
-                    <Button id="id_alert"
-                        icon="sap-icon://alert"
-                        text="{= ${message>/}.length }"
-                        visible="{= ${message>/}.length > 0 }"
-                        type="Emphasized"
-                        press="onMessagePopoverPress" />
-                    <ToolbarSpacer id="id_toolbar1123"/>
-					<Button id="id_add_entry" type="Success" text="{i18n>dialogTemplateButtonText}" press="onsubmit"/>
-                    <Button id="id_add_entrysave" icon="sap-icon://save" type="Attention" text="{i18n>dialogsaveButtonText}" press="onsaveDialog"/>
-                    <Button id="id_add_entry_submit" type="Success" text="{i18n>dialogsubmitButtonText}" press="onsubmitDialog"/>
-                    <Button id="id_add_entry_close" type="Reject" text="{i18n>dialogCancelButtonText}" press="onCloseDialog"/>
-                </content>
-            </Toolbar>
-        </footer>			
-    </Dialog>
+			</VBox>
+		</content>
+		<footer>
+			<Toolbar id="id_createtoolbar">
+				<content>
+					<Button id="id_alert" icon="sap-icon://alert" text="{= ${message>/}.length }" visible="{= ${message>/}.length > 0 }" type="Emphasized" press="onMessagePopoverPress" />
+					<ToolbarSpacer id="id_toolbar1123"/>
+					<Button id="id_button_save_template" icon="sap-icon://bookmark" type="Accept" text="{i18n>dialogsavetemplateButtonText}" iconFirst="true" width="auto" enabled="true" press="onSaveTemplate" />
+					<Button id="id_add_entrysave" icon="sap-icon://save" type="Attention" text="{i18n>dialogsaveButtonText}" press="onsaveDialog"/>
+					<Button id="id_add_entry_submit" type="Success" text="{i18n>dialogsubmitButtonText}" press="onsubmitDialog"/>
+					<Button id="id_add_entry_close" type="Reject" text="{i18n>dialogCancelButtonText}" press="onCloseDialog"/>
+				</content>
+			</Toolbar>
+		</footer>
+	</Dialog>
 </core:FragmentDefinition>

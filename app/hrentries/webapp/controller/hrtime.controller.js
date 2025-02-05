@@ -16,9 +16,10 @@ sap.ui.define([
     "sap/ui/comp/library",
     "sap/ui/model/FilterOperator",
     "sap/ui/core/Fragment",
-    "sap/ui/core/message/Message"
+    "sap/ui/core/message/Message",
+    "sap/ui/model/json/JSONModel"
 ], (Controller, coreLibrary, exportLibrary, Dialog, mobileLibrary, Button, Text, Sorter, Filter,
-    SearchField, UIColumn, MColumn, Label, TypeString, compLibrary, FilterOperator, Fragment, Message) => {
+    SearchField, UIColumn, MColumn, Label, TypeString, compLibrary, FilterOperator, Fragment, Message, JSONModel) => {
     "use strict";
     var oModel, oAddEntryModel, oEmployeeModel, oWbsModel, oTaskModel;
     var DateValue1, DateValue2;
@@ -38,11 +39,9 @@ sap.ui.define([
             oEmployeeModel = this.getOwnerComponent().getModel("EmployeeService");
             oWbsModel = this.getOwnerComponent().getModel("WbselementService");
             oTaskModel = this.getOwnerComponent().getModel("TaskService");
-            oTempModel=this.getOwnerComponent().getModel("my");
             that.getView().setModel(oEmployeeModel);
-            that.getView().setModel(oWbsModel,"WbsElement");
-            that.getView().setModel(oTaskModel,"Tasks");
-            that.getView().setModel(oTempModel,"Temps");
+            that.getView().setModel(oWbsModel, "WbsElement");
+            that.getView().setModel(oTaskModel, "Tasks");
         },
         onFilter: function () {
             var EmployeeId = this.getView().byId("id_employee_extid");
@@ -91,7 +90,7 @@ sap.ui.define([
                 }.bind(this)
             });
         },
-        _datediff : function(oDate1,oDate2){
+        _datediff: function (oDate1, oDate2) {
             const _MS_PER_DAY = 1000 * 60 * 60 * 24;
             // Discard the time and time-zone information.
             const utc1 = Date.UTC(oDate1.getFullYear(), oDate1.getMonth(), oDate1.getDate());
@@ -113,12 +112,12 @@ sap.ui.define([
                 if (oRangeDate.length > 1) {
                     DateValue1 = oRangeDate[0].trim();
                     DateValue2 = oRangeDate[1].trim();
-                    var diff = this._datediff(sFrom,sTo);
-                    if(diff > 6){
+                    var diff = this._datediff(sFrom, sTo);
+                    if (diff > 6) {
                         oEventSource.setValueState(ValueState.Error);
                         oEventSource.setValueStateText("Date Range should be with in 7 days");
                         searchBtn.setEnabled(false);
-                    }else{
+                    } else {
                         oEventSource.setValueState(ValueState.None);
                         oEventSource.setValueStateText("");
                         searchBtn.setEnabled(true);
@@ -253,20 +252,53 @@ sap.ui.define([
                     oEmpWrkId.setVisible(true);
                     oCodeId.setVisible(true);
                     oCostC.setVisible(true);
-                    if(oselectedData.PersonWorkAgreement){
+                    if (oselectedData.PersonWorkAgreement) {
                         oEmpwrkLabel.setVisible(true);
                     }
-                    if(oselectedData.CompanyCode){
+                    if (oselectedData.CompanyCode) {
                         oCodeLabel.setVisible(true);
                         oCodetext.setVisible(true);
                     }
-                    if(oselectedData.CostCenter){
+                    if (oselectedData.CostCenter) {
                         oCostlabel.setVisible(true);
                         oCostText.setVisible(true);
                     }
                 }
             }
             this._oVHDWithSuggestions.close();
+        },
+
+        onRowSelect: function (oEvent) {
+
+            var oFilter = [];
+            var oTimesheetData, that, datevalue, filterUser, filterdate1, filterdate2;
+            var sPath = oEvent.getParameter("rowContext").getPath();
+            that = this;
+            oTimesheetData = new sap.ui.model.json.JSONModel();
+            filterUser = new sap.ui.model.Filter("TemplateID", "EQ", oEmployeeId);
+            oFilter.push(filterUser);
+
+            var oBusyDialog = new sap.m.BusyDialog({
+                title: "Loading Data",
+                text: "Please wait....."
+            });
+            oBusyDialog.open();
+            oModel.read("/MyTimesheetTemplate", {
+                filters: oFilter,
+                urlParameters: { "$top": 999999 },
+                success: function (response) {
+                    var Title;
+                    console.log(response);
+                    console.log(response.results);
+                    oTimesheetData.setData(response.results);
+                    that.getView().setModel(oTimesheetData, "Entries");
+                    oBusyDialog.close();
+                }.bind(this),
+                error: function (error) {
+                    console.log(error);
+                    oBusyDialog.close();
+                }.bind(this)
+            });
         },
         onValueHelpEmployeeVHCancelPress: function (oEvent) {
             this._oVHDWithSuggestions.close();
@@ -313,11 +345,11 @@ sap.ui.define([
                 oVHD.update();
             });
         },
-        onAdd: function(){
+        onAdd: function () {
             var that = this;
             oDialogCreate = this.byId("id_dialogaddentries");
             oAddEntryModel = new sap.ui.model.json.JSONModel();
-            for (i=0;i<=4;i++){
+            for (i = 0; i <= 4; i++) {
                 var addDefaultEntry = {};
                 addDefaultEntry.Id = i;
                 addDefaultEntry.TimesheetDate = '';
@@ -337,8 +369,72 @@ sap.ui.define([
             } else {
                 oDialogCreate.open();
             }
+            //this.bindTemplate();
+            this.bindTemplatedummy();
         },
-        onCloseDialog: function(){
+
+        bindTemplatedummy: function () {
+            const oData = {
+                TempTable: [{
+                    "TempID": 5000,
+                    "TempDesc": "1st Template"
+                },
+                {
+                    "TempID": 5001,
+                    "TempDesc": "2nd Template"
+                }
+                ]
+            };
+            const oModel = new JSONModel(oData);
+			this.getView().setModel(oModel);
+        },
+
+        bindTemplate: function (oEvent) {
+
+            //var oFilter = [];
+            //var oTimesheetData, that, datevalue, filterUser, filterdate1, filterdate2;
+            var oTemplateData, that,
+                that = this;
+            //oTimesheetData = new sap.ui.model.json.JSONModel();
+            oTemplateData = new sap.ui.model.json.JSONModel();
+            // filterUser = new sap.ui.model.Filter("PersonWorkAgreementExternalID", "EQ", oEmployeeId);
+            // oFilter.push(filterUser);
+            // if (oDate1 && oDate2) {
+            //     var oDateRange = oDate1 + 'T00:00:00Z';
+            //     var oDateRangeto = oDate2 + 'T23:59:59Z';
+            //     var CreatedAtFilter = new sap.ui.model.Filter("TimeSheetDate", "BT", oDateRange, oDateRangeto);
+            //     oFilter.push(CreatedAtFilter);
+            // } else if (oDate1) {
+            //     var oDateRangefrom = oDate1 + 'T00:00:00Z';
+            //     var oDateRangeto = oDate1 + 'T23:59:59Z';
+            //     var CreatedAtFilter = new sap.ui.model.Filter("TimeSheetDate", "BT", oDateRangefrom, oDateRangeto);
+            //     oFilter.push(CreatedAtFilter);
+            // }
+            var oBusyDialog = new sap.m.BusyDialog({
+                title: "Loading Data",
+                text: "Please wait....."
+            });
+            oBusyDialog.open();
+            oModel.read("/MyTimesheet", {
+                //filters: oFilter,
+                urlParameters: { "$top": 999999 },
+                success: function (response) {
+                    //var Title;
+                    console.log(response);
+                    console.log(response.results);
+                    //oTimesheetData.setData(response.results);
+                    oTemplateData.setData(response.results);
+                    //that.getView().setModel(oTimesheetData, "Timesheet");
+                    that.getView().setModel(oTemplateData, "TempTable");
+                    oBusyDialog.close();
+                }.bind(this),
+                error: function (error) {
+                    console.log(error);
+                    oBusyDialog.close();
+                }.bind(this)
+            });
+        },
+        onCloseDialog: function () {
             var that;
             that = this;
             addDefaultEntries = [];
@@ -347,7 +443,7 @@ sap.ui.define([
             oAddEntryModel.refresh(true);
             this.getView().byId("id_dialogaddentries").close();
         },
-        onsaveDialog: function(){
+        onsubmitDialog: function () {
             var UploadTable = this.getView().byId("tableId1");
             var uploaddata = UploadTable.getBinding("items");
             var oListData = [];
@@ -355,76 +451,143 @@ sap.ui.define([
             console.log(oListData);
             this.getView().byId("id_dialogaddentries").close();
         },
-        onSubmitDialog: function () {
+        onsaveDialog: function () {
             var UploadTable = this.getView().byId("tableId1");
-            var uploaddata = UploadTable.getItems();
-        
-            if (uploaddata.length === 0) {
-                sap.m.MessageToast.show("No data to save.");
-                return;
-            }
-        
-            var sTemplateId = "TEMPLATE_" + new Date().getTime();
+            var uploaddata = UploadTable.getBinding("items");
             var oListData = [];
-        
-            uploaddata.forEach(function (item) {
-                var oContext = item.getBindingContext();
-                if (oContext) {
-                    var data = Object.assign({}, oContext.getObject());
-                    data.TemplateId = sTemplateId;
-                    oListData.push(data);
-                }
-            });
-        
-            var oModel = this.getView().getModel();
-            oModel.create("/SaveTemplate", { entries: oListData }, {
-                success: function () {
-                    sap.m.MessageToast.show("Template saved successfully!");
-                },
-                error: function () {
-                    sap.m.MessageToast.show("Error saving template.");
-                }
-            });
-        
+            oListData = uploaddata.oList;
+            console.log(oListData);
             this.getView().byId("id_dialogaddentries").close();
         },
-        
-        onLoadTemplates: function () {
-            var oModel = this.getView().getModel();
+        onSaveTemplate: function () {
             var that = this;
-        
-            oModel.callFunction("/GetAllTemplateIds", {
-                method: "GET",
-                success: function (oData) {
-                    var aTemplateIds = oData.value.map(item => ({ TemplateId: item }));
-                    that.getView().getModel("templateModel").setData({ Templates: aTemplateIds });
-                },
-                error: function () {
-                    sap.m.MessageToast.show("Error fetching templates.");
-                }
-            });
+            oDialogCreate = this.byId("id_dialog_savetempname");
+            if (!oDialogCreate) {
+                oDialogCreate = new sap.ui.xmlfragment(this.getView().getId(), "hrentries.hrentries.view.SaveTemplateName", this);
+                this.getView().addDependent(oDialogCreate);
+                oDialogCreate.open();
+            } else {
+                oDialogCreate.open();
+            }
         },
-        
-        onSelectTemplate: function (oEvent) {
-            var sTemplateId = oEvent.getSource().getText();
-            var oModel = this.getView().getModel();
-            var that = this;
-        
-            oModel.callFunction("/GetTemplateData", {
-                method: "GET",
-                urlParameters: { TemplateId: sTemplateId },
-                success: function (oData) {
-                    that.getView().getModel("entryModel").setData({ Entries: oData.value });
-                },
-                error: function () {
-                    sap.m.MessageToast.show("Error fetching template data.");
-                }
+        onTempNameSave: function () {
+            var UploadTable = this.getView().byId("tableId1");
+            var uploaddata = UploadTable.getBinding("items");
+            var oListData = [];
+            oListData = uploaddata.oList;
+            console.log(oListData);
+            this.getView().byId("id_dialog_savetempname").close();
+        },
+        onTempNameSave: function () {
+            var that;
+            that = this;
+            oBusyDialogAdd = new sap.m.BusyDialog({
+                title: "Saving",
+                text: "Please wait....."
             });
-        },        
-        onAddEntry: function(oEvent){
-            var that =this;
+            oBusyDialogAdd.open();
+            var oListData = [];
+            var oRecordEntries = [];
+            var oEmpExtValueadd = this.byId("id_add_employee_extid");
+            var oEmpWrkId = this.byId("id_add_wrkid");
+            var oCodeId = this.byId("id_add_ccode");
+            var oCostC = this.byId("id_add_ccenter");
+            var oTempId = this.byId("id_save_template_id_inp");
+            var oTempDescription = this.byId("id_save_template_desc_inp");
+            var RecordTable = this.getView().byId("tableId1");
+            var newEntries = RecordTable.getBinding("items");
+            oListData = newEntries.oList;
+            var oModelupload = this.getOwnerComponent().getModel();
+            // oModelupload.setUseBatch(true);
+            console.log(oListData);
+            var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+                pattern: "yyyy-MM-dd"
+            });
+
+            var oCheck = this._entriesValidations(oListData);
+            if (oCheck === false) {
+                for (let i = 0; i < oListData.length; i++) {
+                    var TimesheetData = {};
+                    TimesheetData.CompanyCode = oCodeId.getText();
+                    TimesheetData.PersonWorkAgreementExternalID = oEmpExtValueadd.getValue();
+                    TimesheetData.PersonWorkAgreement = oEmpWrkId.getText();
+                    var startdate = oDateFormat.format(oListData[i].TimesheetDate);
+                    var dayformatting = new Date(startdate);
+                    var day = dayformatting.getDay();
+                    TimesheetData.TimeSheetDay = day;
+                    TimesheetData.TimeSheetDate = startdate + 'T00:00:00';
+                    TimesheetData.TimeSheetStatus = '30';
+                    TimesheetData.TimeSheetOperation = 'C';
+                    TimesheetData.TimeSheetIsExecutedInTestRun = false;
+                    TimesheetData.TimeSheetIsReleasedOnSave = true;
+                    TimesheetData.TimeSheetDataFields_RecordedHours = oListData[i].RecordedHours;
+                    TimesheetData.TimeSheetDataFields_RecordedQuantity = oListData[i].RecordedQuantity;
+                    TimesheetData.TimeSheetDataFields_WBSElement = oListData[i].WBSElemt;
+                    TimesheetData.TimeSheetDataFields_TimeSheetTaskType = oListData[i].TaskType;
+                    TimesheetData.TimeSheetDataFields_ReceiverPubSecFuncnlArea = 'YB40';
+                    TimesheetData.TimeSheetDataFields_HoursUnitOfMeasure = 'H';
+                    TimesheetData.TimeSheetDataFields_TimeSheetTaskComponent = 'WORK';
+                    TimesheetData.TimeSheetDataFields_ControllingArea = 'A000';
+                    TimesheetData.TimeSheetDataFields_TimeSheetTaskLevel = 'NONE';
+                    TimesheetData.TimeSheetDataFields_ReceiverCostCenter = oCostC.getText();
+                    TimesheetData.TimeSheetDataFields_TemplateId = oTempId.getValue();
+                    TimesheetData.TimeSheetDataFields_TemplateDescription = oTempDescription.getValue();
+                    oRecordEntries[i] = TimesheetData;
+                    oModelupload.create("/MyTimesheet", oRecordEntries[i], {
+                        success: function (data, response) {
+                            savecount = savecount + 1;
+                            if (response.statusCode == '201') {
+                                if (oListData.length == savecount) {
+                                    that._logmessage();
+                                }
+                            }
+                        }.bind(this),
+                        error: function (error) {
+                            savecount = savecount + 1;
+                            if (oListData.length == savecount) {
+                                that._logmessage();
+                                console.log(error);
+                            }
+                            alert("error")
+                        }.bind(this)
+                    });
+                }
+                //  if (oRecordEntries){
+                //      oModelupload.submitChanges();
+                // }                 
+            } else {
+                var oMessage = new Message({
+                    message: "Select User Name to auto fill User ID, Worker External ID,Person Worker Agreement ID, Business Partner ID, Employee Name, Company Code,Cost Center",
+                    type: MessageType.Error,
+                    target: "/Dummy",
+                    processor: this.getView().getModel()
+                });
+                oMsgButton.setIcon("sap-icon://error");
+                oMsgButton.setType("Reject");
+                sap.ui.getCore().getMessageManager().addMessages(oMessage);
+            }
+        },
+        oncloseTempNameSave: function () {
+            this.getView().byId("id_dialog_savetempname").close();
+        },
+        onSelectTemplate: function () {
+            var that = this;
+            oDialogCreate = this.byId("id_dialog_selecttempname");
+            if (!oDialogCreate) {
+                oDialogCreate = new sap.ui.xmlfragment(this.getView().getId(), "hrentries.hrentries.view.SelectTemplate", this);
+                this.getView().addDependent(oDialogCreate);
+                oDialogCreate.open();
+            } else {
+                oDialogCreate.open();
+            }
+        },
+        oncloseTempNameSelect: function () {
+            this.getView().byId("id_dialog_selecttempname").close();
+        },
+        onAddEntry: function (oEvent) {
+            var that = this;
             var addDefaultEntry = {};
-            i = i+1;
+            i = i + 1;
             addDefaultEntry.Id = i;
             addDefaultEntry.TimesheetDate = '';
             addDefaultEntry.TaskType = '';
@@ -443,10 +606,9 @@ sap.ui.define([
             var oCells = getRemoveIndex.getCells();
             var sId = oCells[0].getValue();
             var iId = sId * 1;
-            const index = addDefaultEntries.findIndex((obj) => ( obj.Id ) === iId );
-            if (index !== -1) 
-            {
-                addDefaultEntries.splice(index,1);
+            const index = addDefaultEntries.findIndex((obj) => (obj.Id) === iId);
+            if (index !== -1) {
+                addDefaultEntries.splice(index, 1);
                 oAddEntryModel.setData(addDefaultEntries);
                 that.getView().setModel(oAddEntryModel, "Entries");
                 oAddEntryModel.refresh(true);
@@ -454,7 +616,7 @@ sap.ui.define([
             var oTable = this.getView().byId("tableId1");
             oTable.removeItem(oEvent.getParameter("listItem"));
         },
-        taskChange: function(oEvent){
+        taskChange: function (oEvent) {
             var oSaveBtn = this.getView().byId("id_add_entrysave");
             var oSubmitBtn = this.getView().byId("id_add_entry_submit");
             var oValidatedComboBox = oEvent.getSource(),
@@ -471,7 +633,7 @@ sap.ui.define([
                 oSubmitBtn.setEnabled(true);
             }
         },
-        wbsChange: function(oEvent){
+        wbsChange: function (oEvent) {
             var oSaveBtn = this.getView().byId("id_add_entrysave");
             var oSubmitBtn = this.getView().byId("id_add_entry_submit");
             var oValidatedComboBox = oEvent.getSource(),
@@ -488,28 +650,28 @@ sap.ui.define([
                 oSubmitBtn.setEnabled(true);
             }
         },
-        handleDateChangeadd_entries : function(oEvent){
+        handleDateChangeadd_entries: function (oEvent) {
             var oSaveBtn = this.getView().byId("id_add_entrysave");
             var oSubmitBtn = this.getView().byId("id_add_entry_submit");
             var oRangeDate = [],
-            sFrom = oEvent.getParameter("from"),
-            sTo = oEvent.getParameter("to"),
-            svalue = oEvent.getParameter("value"),
-            bValid = oEvent.getParameter("valid"),
-            oEventSource = oEvent.getSource();
+                sFrom = oEvent.getParameter("from"),
+                sTo = oEvent.getParameter("to"),
+                svalue = oEvent.getParameter("value"),
+                bValid = oEvent.getParameter("valid"),
+                oEventSource = oEvent.getSource();
             if (bValid) {
                 oEventSource.setValueState(ValueState.None);
                 oRangeDate = svalue.split("–");
                 if (oRangeDate.length > 1) {
                     DateValue1 = oRangeDate[0].trim();
                     DateValue2 = oRangeDate[1].trim();
-                    var diff = this._datediff(sFrom,sTo);
-                    if(diff > 6){
+                    var diff = this._datediff(sFrom, sTo);
+                    if (diff > 6) {
                         oEventSource.setValueState(ValueState.Error);
                         oEventSource.setValueStateText("Date Range should be with in 7 days");
                         oSaveBtn.setEnabled(false);
                         oSubmitBtn.setEnabled(false);
-                    }else{
+                    } else {
                         oEventSource.setValueState(ValueState.None);
                         oEventSource.setValueStateText("");
                         oSaveBtn.setEnabled(true);
@@ -546,58 +708,58 @@ sap.ui.define([
             var newEntries = RecordTable.getBinding("items");
             oListData = newEntries.oList;
             var oModelupload = this.getOwnerComponent().getModel();
-           // oModelupload.setUseBatch(true);
+            // oModelupload.setUseBatch(true);
             console.log(oListData);
             var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
                 pattern: "yyyy-MM-dd"
             });
             var oCheck = this._entriesValidations(oListData);
-            if(oCheck === false) {
-                    for (let i = 0; i < oListData.length; i++) {
-                        var TimesheetData = {};
-                        TimesheetData.CompanyCode = oCodeId.getText();
-                        TimesheetData.PersonWorkAgreementExternalID = oEmpExtValueadd.getValue();
-                        TimesheetData.PersonWorkAgreement = oEmpWrkId.getText();
-                        var startdate = oDateFormat.format(oListData[i].TimesheetDate);
-                        TimesheetData.TimeSheetDate = startdate+'T00:00:00';
-                        TimesheetData.TimeSheetStatus = '30';
-                        TimesheetData.TimeSheetOperation = 'C';
-                        TimesheetData.TimeSheetIsExecutedInTestRun = false;
-                        TimesheetData.TimeSheetIsReleasedOnSave = true;
-                        TimesheetData.TimeSheetDataFields_RecordedHours = oListData[i].RecordedHours;
-                        TimesheetData.TimeSheetDataFields_RecordedQuantity = oListData[i].RecordedHours;
-                        TimesheetData.TimeSheetDataFields_WBSElement = oListData[i].WBSElemt;
-                        TimesheetData.TimeSheetDataFields_TimeSheetTaskType = oListData[i].TaskType;
-                        TimesheetData.TimeSheetDataFields_ReceiverPubSecFuncnlArea = 'YB40';
-                        TimesheetData.TimeSheetDataFields_HoursUnitOfMeasure = 'H';
-                        TimesheetData.TimeSheetDataFields_TimeSheetTaskComponent = 'WORK';
-                        TimesheetData.TimeSheetDataFields_ControllingArea = 'A000';
-                        TimesheetData.TimeSheetDataFields_TimeSheetTaskLevel = 'NONE';
-                        TimesheetData.TimeSheetDataFields_ReceiverCostCenter = oCostC.getText();
-                        oRecordEntries[i] = TimesheetData;
-                        oModelupload.create("/MyTimesheet", oRecordEntries[i], {
-                            success: function (data, response) {
-                                savecount = savecount + 1;
-                                if(response.statusCode == '201'){
-                                    if (oListData.length == savecount) {
-                                        that._logmessage();
-                                    }
-                                }
-                            }.bind(this),
-                            error: function (error) {
-                                savecount = savecount + 1;
+            if (oCheck === false) {
+                for (let i = 0; i < oListData.length; i++) {
+                    var TimesheetData = {};
+                    TimesheetData.CompanyCode = oCodeId.getText();
+                    TimesheetData.PersonWorkAgreementExternalID = oEmpExtValueadd.getValue();
+                    TimesheetData.PersonWorkAgreement = oEmpWrkId.getText();
+                    var startdate = oDateFormat.format(oListData[i].TimesheetDate);
+                    TimesheetData.TimeSheetDate = startdate + 'T00:00:00';
+                    TimesheetData.TimeSheetStatus = '30';
+                    TimesheetData.TimeSheetOperation = 'C';
+                    TimesheetData.TimeSheetIsExecutedInTestRun = false;
+                    TimesheetData.TimeSheetIsReleasedOnSave = true;
+                    TimesheetData.TimeSheetDataFields_RecordedHours = oListData[i].RecordedHours;
+                    TimesheetData.TimeSheetDataFields_RecordedQuantity = oListData[i].RecordedHours;
+                    TimesheetData.TimeSheetDataFields_WBSElement = oListData[i].WBSElemt;
+                    TimesheetData.TimeSheetDataFields_TimeSheetTaskType = oListData[i].TaskType;
+                    TimesheetData.TimeSheetDataFields_ReceiverPubSecFuncnlArea = 'YB40';
+                    TimesheetData.TimeSheetDataFields_HoursUnitOfMeasure = 'H';
+                    TimesheetData.TimeSheetDataFields_TimeSheetTaskComponent = 'WORK';
+                    TimesheetData.TimeSheetDataFields_ControllingArea = 'A000';
+                    TimesheetData.TimeSheetDataFields_TimeSheetTaskLevel = 'NONE';
+                    TimesheetData.TimeSheetDataFields_ReceiverCostCenter = oCostC.getText();
+                    oRecordEntries[i] = TimesheetData;
+                    oModelupload.create("/MyTimesheet", oRecordEntries[i], {
+                        success: function (data, response) {
+                            savecount = savecount + 1;
+                            if (response.statusCode == '201') {
                                 if (oListData.length == savecount) {
                                     that._logmessage();
-                                    console.log(error);
                                 }
+                            }
+                        }.bind(this),
+                        error: function (error) {
+                            savecount = savecount + 1;
+                            if (oListData.length == savecount) {
+                                that._logmessage();
+                                console.log(error);
+                            }
                             alert("error")
-                            }.bind(this)
-                        });
-                    }
-              //  if (oRecordEntries){
-              //      oModelupload.submitChanges();
-              // }                 
-            }else{
+                        }.bind(this)
+                    });
+                }
+                //  if (oRecordEntries){
+                //      oModelupload.submitChanges();
+                // }                 
+            } else {
                 var oMessage = new Message({
                     message: "Select User Name to auto fill User ID, Worker External ID,Person Worker Agreement ID, Business Partner ID, Employee Name, Company Code,Cost Center",
                     type: MessageType.Error,
@@ -606,14 +768,14 @@ sap.ui.define([
                 });
                 oMsgButton.setIcon("sap-icon://error");
                 oMsgButton.setType("Reject");
-                sap.ui.getCore().getMessageManager().addMessages(oMessage);  
+                sap.ui.getCore().getMessageManager().addMessages(oMessage);
             }
 
         },
-        _entriesValidations : function(oList){
+        _entriesValidations: function (oList) {
             return false;
         },
-        _logmessage : function(){
+        _logmessage: function () {
             var that = this;
             this.oLogMessageDialog = new Dialog({
                 type: DialogType.Message,
