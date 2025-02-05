@@ -10,6 +10,11 @@ type TemplateEntry {
     RecordedHours    : Decimal(4,2);
     RecordedQuantity: Decimal(4,2);
 }
+type MyTemplate
+{
+    TemplateId       : String(100);
+    TemplateDescription : String(100);
+}
 
 service MyService {
     
@@ -17,7 +22,7 @@ service MyService {
 
     action SaveTemplate(entries : array of TemplateEntry) returns String;
 
-    function GetAllTemplateIds() returns array of String;
+    function GetAllTemplateIds() returns array of MyTemplate;
 
     action GetTemplateData(TemplateId: String) returns array of Templates;
 }

@@ -370,8 +370,8 @@ sap.ui.define([
             } else {
                 oDialogCreate.open();
             }
-            //this.bindTemplate();
-            this.bindTemplatedummy();
+            this.bindTemplate();
+            //this.bindTemplatedummy();
         },
 
         bindTemplatedummy: function () {
@@ -391,47 +391,28 @@ sap.ui.define([
         },
 
         bindTemplate: function (oEvent) {
-
-            //var oFilter = [];
-            //var oTimesheetData, that, datevalue, filterUser, filterdate1, filterdate2;
-            var oTemplateData, that,
-                that = this;
-            //oTimesheetData = new sap.ui.model.json.JSONModel();
-            oTemplateData = new sap.ui.model.json.JSONModel();
-            // filterUser = new sap.ui.model.Filter("PersonWorkAgreementExternalID", "EQ", oEmployeeId);
-            // oFilter.push(filterUser);
-            // if (oDate1 && oDate2) {
-            //     var oDateRange = oDate1 + 'T00:00:00Z';
-            //     var oDateRangeto = oDate2 + 'T23:59:59Z';
-            //     var CreatedAtFilter = new sap.ui.model.Filter("TimeSheetDate", "BT", oDateRange, oDateRangeto);
-            //     oFilter.push(CreatedAtFilter);
-            // } else if (oDate1) {
-            //     var oDateRangefrom = oDate1 + 'T00:00:00Z';
-            //     var oDateRangeto = oDate1 + 'T23:59:59Z';
-            //     var CreatedAtFilter = new sap.ui.model.Filter("TimeSheetDate", "BT", oDateRangefrom, oDateRangeto);
-            //     oFilter.push(CreatedAtFilter);
-            // }
-            var oBusyDialog = new sap.m.BusyDialog({
-                title: "Loading Data",
-                text: "Please wait....."
-            });
-            oBusyDialog.open();
-            oModel.read("/MyTimesheet", {
-                //filters: oFilter,
-                urlParameters: { "$top": 999999 },
+            var TemplateArray = [];
+            oSaveTempModel.read("/GetAllTemplateIds", {
                 success: function (response) {
-                    //var Title;
-                    console.log(response);
                     console.log(response.results);
-                    //oTimesheetData.setData(response.results);
-                    oTemplateData.setData(response.results);
-                    //that.getView().setModel(oTimesheetData, "Timesheet");
-                    that.getView().setModel(oTemplateData, "TempTable");
-                    oBusyDialog.close();
+                    var count = response.results.length;
+                    for (var i = 0; i < count; i++) {
+                        var TemplateID = response.results[i].TemplateId;
+                        var TemplateDesc = response.results[i].TemplateDescription;
+                        var obj = {
+                            TemplateId: TemplateID,
+                            TemplateDescription: TemplateDesc
+                        };
+                        TemplateArray.push(obj);
+                    }
+                    var oLocalModel = new sap.ui.model.json.JSONModel();      
+                    oLocalModel.setData({
+                        TempTable: TemplateArray
+                    });
+                    this.getView().setModel(oLocalModel);
                 }.bind(this),
                 error: function (error) {
                     console.log(error);
-                    oBusyDialog.close();
                 }.bind(this)
             });
         },

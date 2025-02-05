@@ -22,11 +22,18 @@ module.exports = (srv) => {
 
     srv.on('GetAllTemplateIds', async (req) => {
         const result = await cds.transaction(req).run(
-            SELECT.distinct('TemplateId').from('db.master.TemplateTable')
+            SELECT.distinct('TemplateId', 'TemplateDescription').from('db.master.TemplateTable')
         );
-        return result.map(row => row.TemplateId);
+    
+        console.log("Backend Data:", result);  // Inspect the result
+    
+        // Return data with the required properties
+        return result.map(row => ({
+            TemplateId: row.TemplateId,
+            TemplateDescription: row.TemplateDescription
+        }));
     });
-
+    
     srv.on('GetTemplateData', async (req) => {
         const { TemplateId } = req.data;
         if (!TemplateId) return req.error(400, "TemplateId is required.");

@@ -8,20 +8,30 @@
         <content>
             <VBox id="id_select_vbox">
                 <!-- rows="{/TempTable}" -->
-                <t:Table id="idTable" width="700px" rows="{/TempTable}" rowSelectionChange="onRowSelect" selectionMode="Single">
-                    <t:columns>
-                        <t:Column id="id_column_Temp_id" label="Template ID">
-                            <t:template>
-                                <Text id="tab_text_id_Temp_Id2" text="{TempID}" />
-                            </t:template>
-                        </t:Column>
-                        <t:Column id="id_column_Temp_desc" label="Template Description">
-                            <t:template>
-                                <Text id="tab_text_id_Temp_Desc2" text="{TempDesc}" />
-                            </t:template>
-                        </t:Column>
-                    </t:columns>
-                </t:Table>
+                <Table id="Table" width="700px" noDataText="No data" mode="None" showSeparators="All" growing="true" growingThreshold="20" growingScrollToLoad="true" itemPress="onRowSelect" items="{path:'/TempTable', templateShareable:true}" updateFinished="render">
+                    <columns>
+                        <Column id="Column1" width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Phone" demandPopin="false" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text id="Text1" text="Template ID" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                            <footer/>
+                        </Column>
+                        <Column id="Column2" width="30%" hAlign="Left" vAlign="Top" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text id="Text2" text="Template Description" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                            <footer/>
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem id="ColumnListItem1" type="Navigation">
+                            <cells>
+                                <Text id="tab_text_id_Temp_Id2" text="{TemplateId}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                <Text id="tab_text_id_Temp_Desc2" text="{TemplateDescription}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
             </VBox>
         </content>
         <footer>
@@ -34,3 +44,4 @@
         </footer>
     </Dialog>
 </core:FragmentDefinition>
+ 
