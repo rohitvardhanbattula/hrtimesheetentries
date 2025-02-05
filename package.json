@@ -8,23 +8,18 @@
   "dependencies": {
     "@cap-js-community/odata-v2-adapter": "^1.14.1",
     "@sap/cds": "^8",
+    "@sap/cds-sqlite": "^1.24.1",
     "express": "^4",
     "sqlite3": "^5.1.7"
   },
   "cds": {
-    "requires": {
-      "db": {
-        "name": "sqlite",
-        "model": "db/schema.cds",
-        "credentials": {
-          "database": "db.sqlite"
-        }
-      },
-      "srv": {
-        "name": "timesheet"
-      }
+  "requires": {
+    "db": {
+      "kind": "sqlite"
     }
-  },
+  }
+}
+,
   "devDependencies": {
     "@cap-js/cds-types": "^0.8.0",
     "@cap-js/sqlite": "^1"
