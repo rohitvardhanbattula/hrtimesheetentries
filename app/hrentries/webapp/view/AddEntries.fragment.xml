@@ -40,7 +40,7 @@
 				</f:SimpleForm>
 			</VBox>
 			<VBox class="sapUiSmallMargin" id="tableContainer1">
-				<Table id="tableId1" selectionChange="onRowselect" width="auto" mode="Delete" delete="deleteRow" inset="false" enableBusyIndicator="true" sticky="ColumnHeaders,HeaderToolbar" growing="true" alternateRowColors="true" showNoData="true" items="{
+				<Table id="tableId1" width="auto" mode="Delete" delete="deleteRow" inset="false" enableBusyIndicator="true" sticky="ColumnHeaders,HeaderToolbar" growing="true" alternateRowColors="true" showNoData="true" items="{
 						path: 'Entries>/'
 					}">
 					<headerToolbar>
