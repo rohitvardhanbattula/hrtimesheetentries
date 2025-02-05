@@ -11,17 +11,18 @@ Content-Type: application/json
 {
     "entries": [
         {
-            "TemplateId": "template001",
-            "TemplateDesc":"Template Description",
+           
+            "TemplateDescription":"Template Description",
             "EmployeeExternalId": "EMP123",
             "Date": "2025-02-04",
             "WBSElement": "W01",
             "TaskType": "DEV",
-            "RecordedHours": 8.0
+            "TemplateId": "template002",
+            "RecordedHours": 8
         },
         {
-            "TemplateId": "template001",
-            "TemplateDesc":"Template Description",
+            "TemplateId": "template002",
+            "TemplateDescription":"Template Description",
             "EmployeeExternalId": "EMP456",
             "Date": "2025-02-05",
             "WBSElement": "W02",

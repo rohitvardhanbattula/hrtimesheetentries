@@ -48,7 +48,7 @@
           "odataVersion": "2.0"
         }
       },
-      "TemplateService":{
+      "my":{
         "uri": "/odata/v2/my/",
         "type": "OData",
         "settings": {
@@ -123,6 +123,15 @@
       },
       "TaskService":{
         "dataSource": "TaskService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      },
+      "my":{
+        "dataSource": "my",
         "preload": true,
         "settings": {
           "operationMode": "Server",

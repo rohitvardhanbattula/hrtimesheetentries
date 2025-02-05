@@ -21,7 +21,7 @@ sap.ui.define([
 ], (Controller, coreLibrary, exportLibrary, Dialog, mobileLibrary, Button, Text, Sorter, Filter,
     SearchField, UIColumn, MColumn, Label, TypeString, compLibrary, FilterOperator, Fragment, Message, JSONModel) => {
     "use strict";
-    var oModel, oAddEntryModel, oEmployeeModel, oWbsModel, oTaskModel;
+    var oModel, oAddEntryModel, oEmployeeModel, oWbsModel, oTaskModel, oSaveTempModel;
     var DateValue1, DateValue2;
     var ValueState = coreLibrary.ValueState;
     var addDefaultEntries = [];
@@ -39,6 +39,7 @@ sap.ui.define([
             oEmployeeModel = this.getOwnerComponent().getModel("EmployeeService");
             oWbsModel = this.getOwnerComponent().getModel("WbselementService");
             oTaskModel = this.getOwnerComponent().getModel("TaskService");
+            oSaveTempModel = this.getOwnerComponent().getModel("my");
             that.getView().setModel(oEmployeeModel);
             that.getView().setModel(oWbsModel, "WbsElement");
             that.getView().setModel(oTaskModel, "Tasks");
@@ -487,7 +488,7 @@ sap.ui.define([
             });
             oBusyDialogAdd.open();
             var oListData = [];
-            var oRecordEntries = [];
+            var entries = [];
             var oEmpExtValueadd = this.byId("id_add_employee_extid");
             var oEmpWrkId = this.byId("id_add_wrkid");
             var oCodeId = this.byId("id_add_ccode");
@@ -497,67 +498,46 @@ sap.ui.define([
             var RecordTable = this.getView().byId("tableId1");
             var newEntries = RecordTable.getBinding("items");
             oListData = newEntries.oList;
-            var oModelupload = this.getOwnerComponent().getModel();
-            // oModelupload.setUseBatch(true);
+            
             console.log(oListData);
+            
             var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
                 pattern: "yyyy-MM-dd"
             });
-
+            
             var oCheck = this._entriesValidations(oListData);
             if (oCheck === false) {
                 for (let i = 0; i < oListData.length; i++) {
                     var TimesheetData = {};
-                    TimesheetData.CompanyCode = oCodeId.getText();
-                    TimesheetData.PersonWorkAgreementExternalID = oEmpExtValueadd.getValue();
-                    TimesheetData.PersonWorkAgreement = oEmpWrkId.getText();
+                    TimesheetData.TemplateId = oTempId.getValue();
+                    TimesheetData.TemplateDescription = oTempDescription.getValue();
+                    TimesheetData.EmployeeExternalId = oEmpExtValueadd.getValue();
                     var startdate = oDateFormat.format(oListData[i].TimesheetDate);
                     var dayformatting = new Date(startdate);
                     var day = dayformatting.getDay();
-                    TimesheetData.TimeSheetDay = day;
-                    TimesheetData.TimeSheetDate = startdate + 'T00:00:00';
-                    TimesheetData.TimeSheetStatus = '30';
-                    TimesheetData.TimeSheetOperation = 'C';
-                    TimesheetData.TimeSheetIsExecutedInTestRun = false;
-                    TimesheetData.TimeSheetIsReleasedOnSave = true;
-                    TimesheetData.TimeSheetDataFields_RecordedHours = oListData[i].RecordedHours;
-                    TimesheetData.TimeSheetDataFields_RecordedQuantity = oListData[i].RecordedQuantity;
-                    TimesheetData.TimeSheetDataFields_WBSElement = oListData[i].WBSElemt;
-                    TimesheetData.TimeSheetDataFields_TimeSheetTaskType = oListData[i].TaskType;
-                    TimesheetData.TimeSheetDataFields_ReceiverPubSecFuncnlArea = 'YB40';
-                    TimesheetData.TimeSheetDataFields_HoursUnitOfMeasure = 'H';
-                    TimesheetData.TimeSheetDataFields_TimeSheetTaskComponent = 'WORK';
-                    TimesheetData.TimeSheetDataFields_ControllingArea = 'A000';
-                    TimesheetData.TimeSheetDataFields_TimeSheetTaskLevel = 'NONE';
-                    TimesheetData.TimeSheetDataFields_ReceiverCostCenter = oCostC.getText();
-                    TimesheetData.TimeSheetDataFields_TemplateId = oTempId.getValue();
-                    TimesheetData.TimeSheetDataFields_TemplateDescription = oTempDescription.getValue();
-                    oRecordEntries[i] = TimesheetData;
-                    oModelupload.create("/MyTimesheet", oRecordEntries[i], {
-                        success: function (data, response) {
-                            savecount = savecount + 1;
-                            if (response.statusCode == '201') {
-                                if (oListData.length == savecount) {
-                                    that._logmessage();
-                                }
-                            }
-                        }.bind(this),
-                        error: function (error) {
-                            savecount = savecount + 1;
-                            if (oListData.length == savecount) {
-                                that._logmessage();
-                                console.log(error);
-                            }
-                            alert("error")
-                        }.bind(this)
-                    });
+                    TimesheetData.Date = startdate;
+                    TimesheetData.WBSElement = "WBS";
+                    TimesheetData.TaskType = "2000";
+                    TimesheetData.RecordedHours = oListData[i].RecordedHours;
+                    TimesheetData.RecordedQuantity = oListData[i].RecordedQuantity;
+            if(TimesheetData.Date &&   TimesheetData.RecordedHours && TimesheetData.RecordedQuantity )
+                {
+                    entries.push(TimesheetData);} 
                 }
-                //  if (oRecordEntries){
-                //      oModelupload.submitChanges();
-                // }                 
+              
+                oSaveTempModel.create("/SaveTemplate", {entries} , {
+                    success: function (data, response) {
+                        console.log("Save Success:", data);
+                        that._logmessage();
+                    },
+                    error: function (error) {
+                        console.error("Save Failed:", error);
+                        alert("Error saving template");
+                    }
+                });
             } else {
                 var oMessage = new Message({
-                    message: "Select User Name to auto fill User ID, Worker External ID,Person Worker Agreement ID, Business Partner ID, Employee Name, Company Code,Cost Center",
+                    message: "Select User Name to auto fill User ID, Worker External ID, Person Worker Agreement ID, Business Partner ID, Employee Name, Company Code, Cost Center",
                     type: MessageType.Error,
                     target: "/Dummy",
                     processor: this.getView().getModel()
@@ -566,6 +546,7 @@ sap.ui.define([
                 oMsgButton.setType("Reject");
                 sap.ui.getCore().getMessageManager().addMessages(oMessage);
             }
+            
         },
         oncloseTempNameSave: function () {
             this.getView().byId("id_dialog_savetempname").close();
@@ -727,7 +708,7 @@ sap.ui.define([
                     TimesheetData.TimeSheetIsExecutedInTestRun = false;
                     TimesheetData.TimeSheetIsReleasedOnSave = true;
                     TimesheetData.TimeSheetDataFields_RecordedHours = oListData[i].RecordedHours;
-                    TimesheetData.TimeSheetDataFields_RecordedQuantity = oListData[i].RecordedHours;
+                    TimesheetData.TimeSheetDataFields_RecordedQuantity = oListData[i].RecordedQuantity;
                     TimesheetData.TimeSheetDataFields_WBSElement = oListData[i].WBSElemt;
                     TimesheetData.TimeSheetDataFields_TimeSheetTaskType = oListData[i].TaskType;
                     TimesheetData.TimeSheetDataFields_ReceiverPubSecFuncnlArea = 'YB40';
