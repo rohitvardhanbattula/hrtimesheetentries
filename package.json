@@ -8,7 +8,8 @@
   "dependencies": {
     "@cap-js-community/odata-v2-adapter": "^1.14.1",
     "@sap/cds": "^8",
-    "express": "^4"
+    "express": "^4",
+    "sqlite3": "^5.1.7"
   },
   "cds": {
     "requires": {

@@ -2,6 +2,7 @@ using {db as d} from '../db/schema';
 
 type TemplateEntry {
     TemplateId       : String(100);
+    TemplateDesc : String(100);
     EmployeeExternalId : String(10);
     Date             : Date;
     WBSElement       : String(5);

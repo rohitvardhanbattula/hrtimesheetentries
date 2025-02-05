@@ -12,6 +12,7 @@ Content-Type: application/json
     "entries": [
         {
             "TemplateId": "template001",
+            "TemplateDesc":"Template Description",
             "EmployeeExternalId": "EMP123",
             "Date": "2025-02-04",
             "WBSElement": "W01",
@@ -20,6 +21,7 @@ Content-Type: application/json
         },
         {
             "TemplateId": "template001",
+            "TemplateDesc":"Template Description",
             "EmployeeExternalId": "EMP456",
             "Date": "2025-02-05",
             "WBSElement": "W02",
