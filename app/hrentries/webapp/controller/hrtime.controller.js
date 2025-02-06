@@ -270,29 +270,28 @@ sap.ui.define([
         },
 
         onRowSelect: function (oEvent) {
-
+            
             var oFilter = [];
             var oTimesheetData, that, datevalue, filterUser, filterdate1, filterdate2;
-            var sPath = oEvent.getParameter("rowContext").getPath();
+           // var sPath = oEvent.getParameter("rowContext").getPath();
             that = this;
-            oTimesheetData = new sap.ui.model.json.JSONModel();
-            filterUser = new sap.ui.model.Filter("TemplateID", "EQ", oEmployeeId);
+            //oTimesheetData = new sap.ui.model.json.JSONModel();
+            filterUser = new sap.ui.model.Filter("TemplateId", "EQ", "dcv");
             oFilter.push(filterUser);
-
+            var TempId = oEvent.getParameter("listItem").getBindingContext().getProperty("TemplateId")
             var oBusyDialog = new sap.m.BusyDialog({
                 title: "Loading Data",
                 text: "Please wait....."
             });
             oBusyDialog.open();
-            oModel.read("/MyTimesheetTemplate", {
-                filters: oFilter,
-                urlParameters: { "$top": 999999 },
+            oSaveTempModel.callFunction("/GetTemplateData", {
+                method: "POST", 
+                urlParameters: { "TemplateId": TempId }, 
                 success: function (response) {
-                    var Title;
                     console.log(response);
-                    console.log(response.results);
-                    oTimesheetData.setData(response.results);
-                    that.getView().setModel(oTimesheetData, "Entries");
+                    console.log(response.value); 
+                   // oTimesheetData.setData(response.value);
+                  //  that.getView().setModel(oTimesheetData, "Entries");
                     oBusyDialog.close();
                 }.bind(this),
                 error: function (error) {
@@ -495,7 +494,7 @@ sap.ui.define([
                     TimesheetData.EmployeeExternalId = oEmpExtValueadd.getValue();
                     var startdate = oDateFormat.format(oListData[i].TimesheetDate);
                     var dayformatting = new Date(startdate);
-                    var day = dayformatting.getDay();
+                    TimesheetData.Day = dayformatting.getDay();
                     TimesheetData.Date = startdate;
                     TimesheetData.WBSElement = "WBS";
                     TimesheetData.TaskType = "2000";

@@ -1,1 +1,0 @@
-using srv.CatalogService as service from '../../srv/CatalogService';

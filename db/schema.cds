@@ -11,6 +11,7 @@ context master {
         TaskType : String(5);
         RecordedHours : Decimal(4,2);
         RecordedQuantity: Decimal(4,2);
+        Day: Int16;
     }
 }
 
