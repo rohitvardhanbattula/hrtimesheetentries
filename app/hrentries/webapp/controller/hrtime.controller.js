@@ -268,23 +268,21 @@ sap.ui.define([
             }
             this._oVHDWithSuggestions.close();
         },
-        mapDayToDate: function(day) {
-        var currentDate = new Date();
-        var currentDayOfWeek = currentDate.getDay();
-        var difference = day - currentDayOfWeek;
-        var mappedDate = new Date(currentDate);
-            if (difference <= 0)
-            {
-                mappedDate.setDate(currentDate.getDate() - Math.abs(difference)); 
+        mapDayToDate: function (day) {
+            var currentDate = new Date();
+            var currentDayOfWeek = currentDate.getDay();
+            var difference = day - currentDayOfWeek;
+            var mappedDate = new Date(currentDate);
+            if (difference <= 0) {
+                mappedDate.setDate(currentDate.getDate() - Math.abs(difference));
             }
-        else
-        {
-            mappedDate.setDate(currentDate.getDate() + difference); 
-        }
+            else {
+                mappedDate.setDate(currentDate.getDate() + difference);
+            }
             return mappedDate;
         },
         onRowSelect: function (oEvent) {
-            
+
             var addTempArray = [];
             var oTimesheetData, that, datevalue, filterUser, filterdate1, filterdate2;
             //var sPath = oEvent.getParameter("rowContext").getPath();
@@ -414,7 +412,7 @@ sap.ui.define([
                 ]
             };
             const oModel = new JSONModel(oData);
-			this.getView().setModel(oModel);
+            this.getView().setModel(oModel);
         },
 
         bindTemplate: function (oEvent) {
@@ -432,7 +430,7 @@ sap.ui.define([
                         };
                         TemplateArray.push(obj);
                     }
-                    var oLocalModel = new sap.ui.model.json.JSONModel();      
+                    var oLocalModel = new sap.ui.model.json.JSONModel();
                     oLocalModel.setData({
                         TempTable: TemplateArray
                     });
@@ -506,13 +504,13 @@ sap.ui.define([
             var RecordTable = this.getView().byId("tableId1");
             var newEntries = RecordTable.getBinding("items");
             oListData = newEntries.oList;
-            
+
             console.log(oListData);
-            
+
             var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
                 pattern: "yyyy-MM-dd"
             });
-            
+
             var oCheck = this._entriesValidations(oListData);
             if (oCheck === false) {
                 for (let i = 0; i < oListData.length; i++) {
@@ -528,12 +526,12 @@ sap.ui.define([
                     TimesheetData.TaskType = "2000";
                     TimesheetData.RecordedHours = oListData[i].RecordedHours;
                     TimesheetData.RecordedQuantity = oListData[i].RecordedQuantity;
-            if(TimesheetData.Date &&   TimesheetData.RecordedHours && TimesheetData.RecordedQuantity )
-                {
-                    entries.push(TimesheetData);} 
+                    if (TimesheetData.Date && TimesheetData.RecordedHours && TimesheetData.RecordedQuantity) {
+                        entries.push(TimesheetData);
+                    }
                 }
-              
-                oSaveTempModel.create("/SaveTemplate", {entries} , {
+
+                oSaveTempModel.create("/SaveTemplate", { entries }, {
                     success: function (data, response) {
                         console.log("Save Success:", data);
                         that._logmessage();
@@ -554,7 +552,7 @@ sap.ui.define([
                 oMsgButton.setType("Reject");
                 sap.ui.getCore().getMessageManager().addMessages(oMessage);
             }
-            
+
         },
         oncloseTempNameSave: function () {
             this.getView().byId("id_dialog_savetempname").close();
