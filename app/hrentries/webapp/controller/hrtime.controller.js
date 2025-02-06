@@ -395,7 +395,7 @@ sap.ui.define([
             } else {
                 oDialogCreate.open();
             }
-            this.bindTemplate();
+           // this.bindTemplate();
             //this.bindTemplatedummy();
         },
 
@@ -558,6 +558,7 @@ sap.ui.define([
             this.getView().byId("id_dialog_savetempname").close();
         },
         onSelectTemplate: function () {
+            this.bindTemplate();
             var that = this;
             oDialogCreate = this.byId("id_dialog_selecttempname");
             if (!oDialogCreate) {
