@@ -271,28 +271,42 @@ sap.ui.define([
 
         onRowSelect: function (oEvent) {
             
-            var oFilter = [];
+            var addTempArray = [];
             var oTimesheetData, that, datevalue, filterUser, filterdate1, filterdate2;
-           // var sPath = oEvent.getParameter("rowContext").getPath();
-            that = this;
-            //oTimesheetData = new sap.ui.model.json.JSONModel();
-            filterUser = new sap.ui.model.Filter("TemplateId", "EQ", "dcv");
-            oFilter.push(filterUser);
+            //var sPath = oEvent.getParameter("rowContext").getPath();
             var TempId = oEvent.getParameter("listItem").getBindingContext().getProperty("TemplateId")
+            that = this;
+            oTimesheetData = new sap.ui.model.json.JSONModel();
+            //filterUser = new sap.ui.model.Filter("TemplateID", "EQ", TempId);
+            //oFilter.push(filterUser);
             var oBusyDialog = new sap.m.BusyDialog({
                 title: "Loading Data",
                 text: "Please wait....."
             });
             oBusyDialog.open();
             oSaveTempModel.callFunction("/GetTemplateData", {
-                method: "POST", 
-                urlParameters: { "TemplateId": TempId }, 
+                method: "POST",
+                urlParameters: { "TemplateId": TempId },
                 success: function (response) {
-                    console.log(response);
-                    console.log(response.value); 
-                   // oTimesheetData.setData(response.value);
-                  //  that.getView().setModel(oTimesheetData, "Entries");
+                    console.log(response.results);
+                    for (i = 0; i < response.results.length; i++) {
+                        var addTempData = {};
+                        addTempData.EmployeeExternalId = response.results[i].EmployeeExternalId;
+                        addTempData.RecordedHours = response.results[i].RecordedHours;
+                        addTempData.RecordedQuantity = response.results[i].RecordedQuantity;
+                        addTempData.TaskType = response.results[i].TaskType;
+                        addTempData.TemplateDescription = response.results[i].TemplateDescription;
+                        addTempData.TemplateId = response.results[i].TemplateId;
+                        addTempData.WBSElement = response.results[i].WBSElement;
+                        addTempData.TimesheetDate = response.results[i].Date;
+                        addTempData.Day = response.results[i].Day;
+                        addTempArray.push(addTempData);
+                    }
+                    console.log(addTempArray);
+                    oTimesheetData.setData(addTempArray);
+                    that.getView().setModel(oTimesheetData, "Entries");
                     oBusyDialog.close();
+                    that.getView().byId("id_dialog_selecttempname").close();
                 }.bind(this),
                 error: function (error) {
                     console.log(error);
