@@ -268,7 +268,21 @@ sap.ui.define([
             }
             this._oVHDWithSuggestions.close();
         },
-
+        mapDayToDate: function(day) {
+        var currentDate = new Date();
+        var currentDayOfWeek = currentDate.getDay();
+        var difference = day - currentDayOfWeek;
+        var mappedDate = new Date(currentDate);
+            if (difference <= 0)
+            {
+                mappedDate.setDate(currentDate.getDate() - Math.abs(difference)); 
+            }
+        else
+        {
+            mappedDate.setDate(currentDate.getDate() + difference); 
+        }
+            return mappedDate;
+        },
         onRowSelect: function (oEvent) {
             
             var addTempArray = [];
@@ -298,7 +312,7 @@ sap.ui.define([
                         addTempData.TemplateDescription = response.results[i].TemplateDescription;
                         addTempData.TemplateId = response.results[i].TemplateId;
                         addTempData.WBSElement = response.results[i].WBSElement;
-                        addTempData.TimesheetDate = response.results[i].Date;
+                        addTempData.TimesheetDate = this.mapDayToDate(response.results[i].Day);
                         addTempData.Day = response.results[i].Day;
                         addTempArray.push(addTempData);
                     }
