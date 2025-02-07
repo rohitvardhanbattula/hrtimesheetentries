@@ -8,7 +8,7 @@
         <content>
             <VBox id="id_select_vbox">
                 <!-- rows="{/TempTable}" -->
-                <Table id="Table" width="700px" noDataText="No data" mode="None" showSeparators="All" growing="true" growingThreshold="20" growingScrollToLoad="true" itemPress="onRowSelect" items="{path:'/TempTable', templateShareable:true}" updateFinished="render">
+                <Table id="Table" width="700px" noDataText="No data" mode="SingleSelectLeft" showSeparators="All" growing="true" growingThreshold="20" growingScrollToLoad="true" itemPress="onRowSelect" items="{path:'/TempTable', templateShareable:true}" updateFinished="render">
                     <columns>
                         <Column id="Column1" width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Phone" demandPopin="false" popinDisplay="Inline" mergeDuplicates="false">
                             <header>
