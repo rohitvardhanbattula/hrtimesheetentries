@@ -1,4 +1,4 @@
-using {db as d} from '../db/schema';
+using {db.master as d} from '../db/schema';
 
 type TemplateEntry {
     TemplateId       : String(100);
@@ -19,7 +19,7 @@ type MyTemplate
 
 service MyService {
     
-    entity Templates as projection on d.master.TemplateTable;
+    entity Templates as projection on d.TemplateTable;
 
     action SaveTemplate(entries : array of TemplateEntry) returns String;
 

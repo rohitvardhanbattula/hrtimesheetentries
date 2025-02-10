@@ -5,6 +5,12 @@
             "driver": "SQLite",
             "database": "${workspaceFolder:hrtimesheetentries}/db.sqlite",
             "name": "Main"
+        },
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "Tables",
+            "database": "sjxcbsna"
         }
     ]
 }
