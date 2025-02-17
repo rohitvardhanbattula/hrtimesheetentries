@@ -42,3 +42,11 @@ Content-Type: application/json
 {
     "TemplateId":"template001"
 }
+###
+POST https://internal-xsuaa.authentication.us10.hana.ondemand.com/oauth/token
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic base64(client_id:client_secret)
+
+grant_type=client_credentials
+&scope=openid
+

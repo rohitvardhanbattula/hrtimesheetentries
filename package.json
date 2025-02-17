@@ -6,39 +6,63 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@cap-js-community/odata-v2-adapter": "^1.14.0",
+    "@cap-js-community/odata-v2-adapter": "^1.14.1",
     "@cap-js/hana": "^1",
+    "@sap-cloud-sdk/generator": "^3.26.0",
     "@sap-cloud-sdk/http-client": "^3.26.0",
     "@sap-cloud-sdk/odata-v2": "^3.26.0",
     "@sap-cloud-sdk/resilience": "^3.26.0",
     "@sap/cds": "^8.7.0",
-    "@sap/cds-dk": "^8.7.0",
+    "@sap/cds-mtxs": "^2",
     "@sap/cds-sqlite": "^1.24.1",
+    "@sap/xsenv": "^5.4.0",
     "@sap/xssec": "^4",
-    "express": "^4",
+    "express": "^4.21.2",
     "hdb": "^0.19.12",
+    "rimraf": "^6.0.1",
     "sqlite": "^5.1.1"
   },
   "cds": {
+    "uaa": {
+      "kind": "xsuaa"
+    },
     "hana": {
       "deploy-format": "hdbtable"
     },
     "requires": {
       "db": {
         "kind": "hana"
+      },
+      "cors": {
+        "enabled": true
+      },
+      "destinations": true,
+      "html5-repo": true,
+      "workzone": true,
+      "[production]": {
+        "auth": "xsuaa",
+        "db": {
+          "kind": "hana"
+        }
       }
     },
-    
     "sql": {
       "native_hana_associations": false
     }
   },
+  "sapux": [
+    "app/hrentries",
+    "app/hrentries"
+  ],
   "devDependencies": {
     "@cap-js/cds-types": "^0.8.0",
     "@cap-js/sqlite": "^1.8.0",
-    "@sap/cds-dk": "^8"
+    "@sap/cds-dk": "^8.7.1"
   },
   "scripts": {
-    "start": "cds-serve"
+    "start": "cds-serve",
+    "ui": "cds w --open hrentries/webapp/index.html?sap-ui-xx-viewCache=false",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+    "build": "npx rimraf resources mta_archives && mbt build --mtar archive"
   }
 }

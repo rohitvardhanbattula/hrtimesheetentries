@@ -19,7 +19,20 @@ type MyTemplate
 
 service MyService {
     
-    entity Templates as projection on d.TemplateTable;
+    entity Templates @(restrict:[
+
+        {
+            grant : ['VIEW'],
+            to :'Viewer'
+        },
+        {
+            grant : ['EDIT'],
+            to :'Editor'
+        }
+    ])
+    
+    
+     as projection on d.TemplateTable;
 
     action SaveTemplate(entries : array of TemplateEntry) returns String;
 

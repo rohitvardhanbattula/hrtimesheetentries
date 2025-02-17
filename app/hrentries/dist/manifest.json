@@ -47,6 +47,26 @@
                     "annotations": [],
                     "odataVersion": "2.0"
                 }
+            },
+            "my": {
+                "uri": "odata/v2/my/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [],
+                    "odataVersion": "2.0"
+                }
+            }
+        },
+        "crossNavigation": {
+            "inbounds": {
+                "hrentries-display": {
+                    "semanticObject": "hrentries",
+                    "action": "display",
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    }
+                }
             }
         }
     },
@@ -121,6 +141,15 @@
                     "autoExpandSelect": true,
                     "earlyRequests": true
                 }
+            },
+            "my": {
+                "dataSource": "my",
+                "preload": true,
+                "settings": {
+                    "operationMode": "Server",
+                    "autoExpandSelect": true,
+                    "earlyRequests": true
+                }
             }
         },
         "resources": {
@@ -161,5 +190,9 @@
             "type": "XML",
             "id": "App"
         }
+    },
+    "sap.cloud": {
+        "public": true,
+        "service": "hrtimesheetentries"
     }
 }

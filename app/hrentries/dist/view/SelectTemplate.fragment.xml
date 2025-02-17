@@ -1,0 +1,47 @@
+<core:FragmentDefinition xmlns:odata="sap.ui.comp.odata"
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:t="sap.ui.table"
+    xmlns:core="sap.ui.core">
+    <Dialog id="id_dialog_selecttempname" title="{i18n>ListofTemplates}" class="sapUiSmallMargin">
+        <content>
+            <VBox id="id_select_vbox">
+                <!-- rows="{/TempTable}" -->
+                <Table id="Table" width="700px" noDataText="No data" mode="SingleSelectLeft" showSeparators="All" growing="true" growingThreshold="20" growingScrollToLoad="true" itemPress="onRowSelect" items="{path:'/TempTable', templateShareable:true}" updateFinished="render">
+                    <columns>
+                        <Column id="Column1" width="auto" hAlign="Left" vAlign="Top" minScreenWidth="Phone" demandPopin="false" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text id="Text1" text="Template ID" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                            <footer/>
+                        </Column>
+                        <Column id="Column2" width="30%" hAlign="Left" vAlign="Top" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" mergeDuplicates="false">
+                            <header>
+                                <Text id="Text2" text="Template Description" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </header>
+                            <footer/>
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem id="ColumnListItem1" type="Navigation">
+                            <cells>
+                                <Text id="tab_text_id_Temp_Id2" text="{TemplateId}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                                <Text id="tab_text_id_Temp_Desc2" text="{TemplateDescription}" width="auto" maxLines="1" wrapping="false" textAlign="Begin" textDirection="Inherit" visible="true"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </content>
+        <footer>
+            <Toolbar id="id_select_temp_name_toolbar">
+                <content>
+                    <ToolbarSpacer id="id_select_temp_name_spacer" />
+                    <Button id="id_select_temp_name_entry_close" text="{i18n>closebutton}" press="oncloseTempNameSelect" />
+                </content>
+            </Toolbar>
+        </footer>
+    </Dialog>
+</core:FragmentDefinition>
+ 

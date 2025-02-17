@@ -24,7 +24,7 @@
           "odataVersion": "2.0"
         }
       },
-      "EmployeeService":{
+      "EmployeeService": {
         "uri": "/odata/v2/EmployeeService/",
         "type": "OData",
         "settings": {
@@ -32,7 +32,7 @@
           "odataVersion": "2.0"
         }
       },
-      "WbselementService":{
+      "WbselementService": {
         "uri": "/odata/v2/WbselementService/",
         "type": "OData",
         "settings": {
@@ -40,7 +40,7 @@
           "odataVersion": "2.0"
         }
       },
-      "TaskService":{
+      "TaskService": {
         "uri": "/odata/v2/TaskService/",
         "type": "OData",
         "settings": {
@@ -48,12 +48,24 @@
           "odataVersion": "2.0"
         }
       },
-      "my":{
+      "my": {
         "uri": "/odata/v2/my/",
         "type": "OData",
         "settings": {
           "annotations": [],
           "odataVersion": "2.0"
+        }
+      }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "hrentries-display": {
+          "semanticObject": "hrentries",
+          "action": "display",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
         }
       }
     }
@@ -103,7 +115,7 @@
           "earlyRequests": true
         }
       },
-      "EmployeeService":{
+      "EmployeeService": {
         "dataSource": "EmployeeService",
         "preload": true,
         "settings": {
@@ -112,7 +124,7 @@
           "earlyRequests": true
         }
       },
-      "WbselementService":{
+      "WbselementService": {
         "dataSource": "WbselementService",
         "preload": true,
         "settings": {
@@ -121,7 +133,7 @@
           "earlyRequests": true
         }
       },
-      "TaskService":{
+      "TaskService": {
         "dataSource": "TaskService",
         "preload": true,
         "settings": {
@@ -130,7 +142,7 @@
           "earlyRequests": true
         }
       },
-      "my":{
+      "my": {
         "dataSource": "my",
         "preload": true,
         "settings": {
@@ -178,5 +190,9 @@
       "type": "XML",
       "id": "App"
     }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "hrtimesheetentries"
   }
 }

@@ -1,0 +1,29 @@
+<core:FragmentDefinition xmlns:odata="sap.ui.comp.odata"
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core">
+    <Dialog id="id_dialog_savetempname" title="{i18n>dialogsavetemplateButtonText}">
+        <content>
+            <VBox id="id_save_vbox" class="sapUiSmallMargin">
+                <f:SimpleForm id="id_save_template_simpleform" editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanM="4" labelSpanL="3" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="3" columnsL="1" columnsM="1" singleContainerFullSize="false">
+                    <f:content>
+                        <Label id="id_save_template_id_label" text="Template ID" design="Bold" width="100%" required="true" textAlign="Begin" textDirection="LTR" />
+                        <Input id="id_save_template_id_inp" value="" />
+                        <Label id="id_save_template_desc_label" text="Template Desc" design="Bold" width="100%" required="true" textAlign="Begin" textDirection="LTR" />
+                        <Input id="id_save_template_desc_inp" value="" />
+                    </f:content>
+                </f:SimpleForm>
+            </VBox>
+        </content>
+        <footer>
+            <Toolbar id="id_save_temp_name_toolbar">
+                <content>
+                    <ToolbarSpacer id="id_save_temp_name_spacer" />
+                    <Button id="id_save_temp_name_entry_ok" type="Emphasized" text="{i18n>okbutton}" press="onTempNameSave" />
+                    <Button id="id_save_temp_name_entry_close" text="{i18n>closebutton}" press="oncloseTempNameSave" />
+                </content>
+            </Toolbar>
+        </footer>
+    </Dialog>
+</core:FragmentDefinition>
