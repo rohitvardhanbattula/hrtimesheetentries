@@ -1,4 +1,6 @@
 {
+  "xsappname": " hrtimesheetentries-${org}-${space}",
+  "tenant-mode": "dedicated",
   "scopes": [
     {
       "name": "$XSAPPNAME.Viewer",
@@ -28,15 +30,7 @@
       "attribute-references": []
     }
     
-  ],
-  "oauth2-configuration": {
-    "credential-types": [
-      "binding-secret",
-      "x509"
-    ],
-    "redirect-uris": [
-      "https://1d8e6327trial-dev-hrtimesheetentries.cfapps.us10-001.hana.ondemand.com/login/callback",
-    "http://localhost:5000/"
-    ]
-  }
+  ]
+    
+  
 }
