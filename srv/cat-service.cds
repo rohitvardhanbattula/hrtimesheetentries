@@ -30,9 +30,7 @@ service MyService {
             to :'Editor'
         }
     ])
-    
-    
-     as projection on d.TemplateTable;
+    as projection on d.TemplateTable;
 
     action SaveTemplate(entries : array of TemplateEntry) returns String;
 
