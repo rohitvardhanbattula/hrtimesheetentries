@@ -133,7 +133,7 @@ resources:
           instance:
             existing_destinations_policy: update
             destinations:
-              - Name: hrtimesheetentries-srv-api
+              - Name: srv-api
                 URL: ~{srv-api/srv-url}
                 Authentication: NoAuthentication
                 Type: HTTP

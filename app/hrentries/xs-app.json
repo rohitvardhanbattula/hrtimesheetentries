@@ -3,7 +3,7 @@
   "authenticationMethod": "route",
   "routes": [
     {
-      "source": "^/odata/v4/(.*)$",
+      "source": "^/odata/v2/(.*)$",
       "destination": "srv-api",
       "csrfProtection": true
     },
@@ -24,19 +24,6 @@
       "target": "$1",
       "service": "html5-apps-repo-rt",
       "authenticationType": "xsuaa"
-    },
-    {
-      "source": "^/?odata/v2/(.*)$",
-      "destination": "hrtimesheetentries-srv-api",
-      "authenticationType": "xsuaa",
-      "csrfProtection": true
-    },
-    {
-      "source": "^/?odata/(.*)$",
-      "target": "/odata/$1",
-      "destination": "hrtimesheetentries-srv-api",
-      "authenticationType": "xsuaa",
-      "csrfProtection": true
     }
   ]
 }

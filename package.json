@@ -23,15 +23,16 @@
     "sqlite": "^5.1.1"
   },
   "cds": {
-    "uaa": {
-      "kind": "xsuaa"
-    },
     "hana": {
       "deploy-format": "hdbtable"
     },
     "requires": {
       "db": {
         "kind": "hana"
+      },
+      "auth":
+      {
+        "kind":"xsuaa"
       },
       "cors": {
         "enabled": true
@@ -40,7 +41,9 @@
       "html5-repo": true,
       "workzone": true,
       "[production]": {
-        "auth": "xsuaa",
+        "auth": {
+          "kind": "xsuaa"
+        },
         "db": {
           "kind": "hana"
         }
