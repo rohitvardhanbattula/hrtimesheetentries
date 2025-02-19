@@ -61,6 +61,7 @@ modules:
       builder: custom
       commands:
         - npm ci
+        
         - npm run build:cf
         - npm run build
       supported-platforms:
