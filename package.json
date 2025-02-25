@@ -30,9 +30,8 @@
       "db": {
         "kind": "hana"
       },
-      "auth":
-      {
-        "kind":"xsuaa"
+      "auth": {
+        "kind": "xsuaa"
       },
       "cors": {
         "enabled": true

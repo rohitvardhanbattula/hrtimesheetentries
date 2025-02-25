@@ -29,7 +29,7 @@ modules:
       - name: hrtimesheetentries-destination
       - name: hrtimesheetentries-db
       - name: hrtimesheetentries-auth
-
+ 
   - name: hrtimesheetentries-db-deployer
     type: hdb
     path: gen/db
@@ -37,7 +37,7 @@ modules:
       buildpack: nodejs_buildpack
     requires:
       - name: hrtimesheetentries-db
-
+ 
   - name: hrtimesheetentries-app-deployer
     type: com.sap.application.content
     path: gen
@@ -52,7 +52,7 @@ modules:
           artifacts:
             - hrentrieshrentries.zip
           target-path: app/
-
+ 
   - name: hrtimesheetentrieshrentries
     type: html5
     path: app/hrentries
@@ -61,12 +61,11 @@ modules:
       builder: custom
       commands:
         - npm ci
-        
         - npm run build:cf
         - npm run build
       supported-platforms:
         []
-
+ 
   - name: hrtimesheetentries-destinations
     type: com.sap.application.content
     requires:
@@ -98,7 +97,7 @@ modules:
               ServiceInstanceName: hrtimesheetentries-auth
               ServiceKeyName: hrtimesheetentries-auth-key
               sap.cloud.service: hrtimesheetentries
-
+ 
   - name: hrtimesheetentries
     type: approuter.nodejs
     path: app/router
@@ -121,7 +120,7 @@ modules:
         properties:
           app-protocol: ${protocol}
           app-uri: ${default-uri}
-
+ 
 resources:
   - name: hrtimesheetentries-destination
     type: org.cloudfoundry.managed-service
